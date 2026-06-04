@@ -1,0 +1,11 @@
+{
+  "name": "@gymapp/shared-types",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "echo \"[shared-types] no build yet (built in T0.3)\"",
+    "lint": "echo \"[shared-types] no lint yet\"",
+    "typecheck": "echo \"[shared-types] no typecheck yet\"",
+    "test": "echo \"[shared-types] no tests yet\""
+  }
+}

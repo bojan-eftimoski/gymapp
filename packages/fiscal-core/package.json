@@ -1,0 +1,11 @@
+{
+  "name": "@gymapp/fiscal-core",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "echo \"[fiscal-core] no build yet (built in T0.3/T0.9)\"",
+    "lint": "echo \"[fiscal-core] no lint yet\"",
+    "typecheck": "echo \"[fiscal-core] no typecheck yet\"",
+    "test": "echo \"[fiscal-core] no tests yet\""
+  }
+}

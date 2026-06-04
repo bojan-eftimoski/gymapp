@@ -1,0 +1,29 @@
+{
+  "name": "gymapp",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Gym & Fitness Management Platform — multi-tenant SaaS (admin web + member mobile + NestJS API + fiscal bridge)",
+  "packageManager": "pnpm@9.15.9",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "dev": "turbo run dev",
+    "format": "prettier --write \"**/*.{ts,tsx,js,cjs,mjs,json,md,yaml,yml}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,cjs,mjs,json,md,yaml,yml}\"",
+    "db:generate": "pnpm --filter @gymapp/db generate",
+    "db:migrate": "pnpm --filter @gymapp/db migrate:dev",
+    "db:seed": "pnpm --filter @gymapp/db seed",
+    "db:up": "docker compose -f docker/docker-compose.yml up -d mysql",
+    "db:down": "docker compose -f docker/docker-compose.yml down"
+  },
+  "devDependencies": {
+    "prettier": "^3.4.2",
+    "turbo": "^2.3.3",
+    "typescript": "^5.7.2"
+  }
+}

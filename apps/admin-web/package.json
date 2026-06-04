@@ -1,0 +1,11 @@
+{
+  "name": "@gymapp/admin-web",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "echo \"[admin-web] no build yet (scaffolded in T0.10)\"",
+    "lint": "echo \"[admin-web] no lint yet\"",
+    "typecheck": "echo \"[admin-web] no typecheck yet\"",
+    "test": "echo \"[admin-web] no tests yet\""
+  }
+}

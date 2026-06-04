@@ -1,0 +1,11 @@
+{
+  "name": "@gymapp/member-mobile",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "echo \"[member-mobile] no build yet (scaffolded in T0.12)\"",
+    "lint": "echo \"[member-mobile] no lint yet\"",
+    "typecheck": "echo \"[member-mobile] no typecheck yet\"",
+    "test": "echo \"[member-mobile] no tests yet\""
+  }
+}

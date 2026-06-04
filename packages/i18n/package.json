@@ -1,0 +1,11 @@
+{
+  "name": "@gymapp/i18n",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "echo \"[i18n] no build yet (built in T0.3)\"",
+    "lint": "echo \"[i18n] no lint yet\"",
+    "typecheck": "echo \"[i18n] no typecheck yet\"",
+    "test": "echo \"[i18n] no tests yet\""
+  }
+}

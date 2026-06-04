@@ -1,0 +1,11 @@
+{
+  "name": "@gymapp/fiscal-bridge",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "echo \"[fiscal-bridge] no build yet (scaffolded in T0.9)\"",
+    "lint": "echo \"[fiscal-bridge] no lint yet\"",
+    "typecheck": "echo \"[fiscal-bridge] no typecheck yet\"",
+    "test": "echo \"[fiscal-bridge] no tests yet\""
+  }
+}

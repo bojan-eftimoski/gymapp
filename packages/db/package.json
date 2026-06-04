@@ -1,0 +1,11 @@
+{
+  "name": "@gymapp/db",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "echo \"[db] no build yet (built in T0.4)\"",
+    "lint": "echo \"[db] no lint yet\"",
+    "typecheck": "echo \"[db] no typecheck yet\"",
+    "test": "echo \"[db] no tests yet\""
+  }
+}
