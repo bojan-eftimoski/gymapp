@@ -6,17 +6,17 @@ Multi-tenant SaaS for the North Macedonian fitness market: an admin/manager web 
 
 ## Monorepo layout
 
-| Path | What |
-|---|---|
-| `apps/api` | NestJS cloud backend (REST `/api/v1`, multi-tenant) |
-| `apps/admin-web` | React (Vite) admin **and** PWA front-desk/POS terminal — the **web** app |
-| `apps/member-mobile` | React Native member app — the **mobile** app |
-| `apps/fiscal-bridge` | Local edge agent: fiscal device + offline queue + sync |
-| `packages/db` | Prisma schema (data-model source of truth), client, migrations, seed |
-| `packages/shared-types` | Shared TS types, DTO/Zod contracts, enums |
-| `packages/fiscal-core` | Fiscal engine: `FiscalDriver` interface + `MockFiscalDriver` |
-| `packages/i18n` | mk / sq / en catalogs + denar/date formatters |
-| `packages/config` | Shared tsconfig / eslint / prettier presets |
+| Path                    | What                                                                     |
+| ----------------------- | ------------------------------------------------------------------------ |
+| `apps/api`              | NestJS cloud backend (REST `/api/v1`, multi-tenant)                      |
+| `apps/admin-web`        | React (Vite) admin **and** PWA front-desk/POS terminal — the **web** app |
+| `apps/member-mobile`    | React Native member app — the **mobile** app                             |
+| `apps/fiscal-bridge`    | Local edge agent: fiscal device + offline queue + sync                   |
+| `packages/db`           | Prisma schema (data-model source of truth), client, migrations, seed     |
+| `packages/shared-types` | Shared TS types, DTO/Zod contracts, enums                                |
+| `packages/fiscal-core`  | Fiscal engine: `FiscalDriver` interface + `MockFiscalDriver`             |
+| `packages/i18n`         | mk / sq / en catalogs + denar/date formatters                            |
+| `packages/config`       | Shared tsconfig / eslint / prettier presets                              |
 
 ## Prerequisites
 
@@ -30,7 +30,14 @@ Multi-tenant SaaS for the North Macedonian fitness market: an admin/manager web 
 pnpm install            # install the workspace
 pnpm db:up              # start MySQL (Docker)
 pnpm build              # turbo build all
-pnpm lint               # turbo lint all
+pnpm lint               # eslint across the repo (flat config)
+pnpm format             # prettier --write
 pnpm typecheck          # turbo typecheck all
 pnpm test               # turbo test all
 ```
+
+## CI & contributing
+
+- **CI** (`.github/workflows/ci.yml`) runs on every push to `main` and on PRs: `format:check` → `lint` → `typecheck` → `test`.
+- **Commits** follow [Conventional Commits](https://www.conventionalcommits.org/) (enforced by commitlint via a `commit-msg` hook); a `pre-commit` hook runs lint-staged (eslint --fix + prettier).
+- **Recommended:** enable branch protection on `main` requiring the CI check to pass before merge.

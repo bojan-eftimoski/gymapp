@@ -11,18 +11,19 @@
 
 These were decided during planning and are the source of truth for the build. Do not re-litigate without updating this file.
 
-| # | Decision | Choice |
-|---|---|---|
-| 1 | Repo structure | **Monorepo** — pnpm workspaces + Turborepo |
-| 2 | Multi-tenancy | **Single MySQL database, shared schema, `tenantId` (facilityId) on every tenant-owned row**, enforced by a Prisma client extension + request-scoped tenant context. No query may cross tenants. |
-| 3 | Fiscal integration topology | **Local "fiscal-bridge" agent** at the edge (per facility) owns the device connection + the offline transaction queue, and syncs to the cloud API on reconnect. Fiscal domain logic lives in a shared `fiscal-core` package. |
-| 4 | Fiscal device (now) | **Mock driver only.** Build a pluggable `FiscalDriver` interface + `MockFiscalDriver`. Real Akcent/David drivers + certification are deferred (see T1.19). |
-| 5 | Front-desk terminal | **The React admin web app shipped as a PWA** on the Android tablet — IndexedDB offline queue + service worker, talking to the local fiscal-bridge on localhost. No separate native terminal app. |
-| 6 | Auth | **Separate `Staff` and `Member` identity tables**, one auth module issuing **JWT access (short) + refresh (rotating)** tokens carrying `tenantId` + `role`/`scope`. RBAC via Nest guards. |
-| 7 | Hosting | **Hetzner (EU region), Docker.** Managed/containerized MySQL, containerized API + bridge images. |
-| 8 | Localization | **i18n infrastructure for MK / SQ / EN built now; ship MK + EN content at MVP. Albanian (SQ) content deferred to P1 (T2.27).** Currency always denar (MKD). |
+| #   | Decision                    | Choice                                                                                                                                                                                                                       |
+| --- | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | Repo structure              | **Monorepo** — pnpm workspaces + Turborepo                                                                                                                                                                                   |
+| 2   | Multi-tenancy               | **Single MySQL database, shared schema, `tenantId` (facilityId) on every tenant-owned row**, enforced by a Prisma client extension + request-scoped tenant context. No query may cross tenants.                              |
+| 3   | Fiscal integration topology | **Local "fiscal-bridge" agent** at the edge (per facility) owns the device connection + the offline transaction queue, and syncs to the cloud API on reconnect. Fiscal domain logic lives in a shared `fiscal-core` package. |
+| 4   | Fiscal device (now)         | **Mock driver only.** Build a pluggable `FiscalDriver` interface + `MockFiscalDriver`. Real Akcent/David drivers + certification are deferred (see T1.19).                                                                   |
+| 5   | Front-desk terminal         | **The React admin web app shipped as a PWA** on the Android tablet — IndexedDB offline queue + service worker, talking to the local fiscal-bridge on localhost. No separate native terminal app.                             |
+| 6   | Auth                        | **Separate `Staff` and `Member` identity tables**, one auth module issuing **JWT access (short) + refresh (rotating)** tokens carrying `tenantId` + `role`/`scope`. RBAC via Nest guards.                                    |
+| 7   | Hosting                     | **Hetzner (EU region), Docker.** Managed/containerized MySQL, containerized API + bridge images.                                                                                                                             |
+| 8   | Localization                | **i18n infrastructure for MK / SQ / EN built now; ship MK + EN content at MVP. Albanian (SQ) content deferred to P1 (T2.27).** Currency always denar (MKD).                                                                  |
 
 ### Accepted lower-stakes defaults
+
 - **API contract:** NestJS DTOs validated with class-validator; OpenAPI/Swagger auto-generated; shared TS types/Zod contracts in `packages/shared-types`.
 - **Client data/state:** TanStack Query + Zustand (admin web and RN).
 - **UI:** admin = React + Vite + **shadcn/ui** + Tailwind; member app = React Native + **React Native Paper**.
@@ -73,14 +74,15 @@ gymapp/
   - [x] Integration: commit; verify Turbo task graph caches.
   - ✅ **Done (2026-06-04):** pnpm 9.15.9 + turbo 2.9.16; 9 workspace packages all build green. Placeholder `build/lint/typecheck/test` scripts echo until each package is fleshed out in its own task. pnpm installed via `npm i -g` (corepack shim wasn't on PATH on this Windows machine). Remote `origin` = github.com/bojan-eftimoski/gymapp.
 
-- [ ] **T0.2 — Shared tooling & CI config** · `P0`
+- [x] **T0.2 — Shared tooling & CI config** · `P0`
   - _Description:_ Centralized TS/ESLint/Prettier presets and a CI pipeline.
   - _Depends on:_ T0.1 · _Covers:_ infra, NFR 8.6
-  - [ ] `packages/config`: base `tsconfig`, ESLint (TS + import + boundaries), Prettier, Tailwind preset.
-  - [ ] Git hooks (lint-staged + commit message check) and `.editorconfig`.
-  - [ ] `.github/workflows/ci.yml`: install → typecheck → lint → test on PR.
-  - [ ] Tests: CI green on an empty PR; lint fails on a deliberately bad file.
-  - [ ] Integration: branch protection notes documented in README.
+  - [x] `packages/config`: base `tsconfig`, ESLint (flat config, TS), Prettier. _(Import-boundaries plugin + Tailwind preset deferred: boundaries add value once real cross-package imports exist; Tailwind preset lands with admin-web in T0.10.)_
+  - [x] Git hooks (lint-staged + commit message check) and `.editorconfig`.
+  - [x] `.github/workflows/ci.yml`: install → format:check → lint → typecheck → test on PR + push.
+  - [x] Tests: lint passes clean; **verified lint fails on a deliberately bad file** (`no-debugger`, exit 1); `format:check` + `typecheck` green.
+  - [x] Integration: branch protection note documented in README.
+  - ✅ **Done (2026-06-04):** ESLint 9 flat config (`@eslint/js` + `typescript-eslint` + `eslint-config-prettier`) exported from `@gymapp/config/eslint`; root `lint` = `eslint .`. Husky v9 hooks (`pre-commit` → lint-staged, `commit-msg` → commitlint/conventional). CI on Node 20 + pnpm 9.15.9.
 
 - [ ] **T0.3 — Shared packages bootstrap** · `P0`
   - _Description:_ Initialize `shared-types`, `i18n`, and `fiscal-core` so other packages can import them.
@@ -413,7 +415,7 @@ gymapp/
   - [ ] Tests: export contains all member data; erasure removes/anonymizes personal data while retaining legally-required fiscal records; consent gates sensitive fields; audited.
   - [ ] Integration: run a full subject-access + erasure cycle.
 
-- [ ] **T1.19 — Real fiscal driver + certification (Akcent/David)** · `P0` *(deferred — currently mocked per Decision #4; REQUIRED before any production go-live)*
+- [ ] **T1.19 — Real fiscal driver + certification (Akcent/David)** · `P0` _(deferred — currently mocked per Decision #4; REQUIRED before any production go-live)_
   - _Description:_ Implement a real `FiscalDriver` for the first target device and complete certification, replacing the mock in production.
   - _Depends on:_ T0.9, T1.7, T1.8 · _Covers:_ BP-02 (real), §9.2 fiscal devices, Risk "fiscal-device integration"
   - [ ] Decide first target model (Akcent **or** David) + obtain hardware + protocol/SDK docs (open input — pin this before starting).
@@ -573,28 +575,29 @@ gymapp/
 - [ ] **T3.2 — Forecasting analytics** · `P2` — _Covers:_ BA-07. Depends on T2.9. Expected renewals + projected recurring revenue.
 - [ ] **T3.3 — Staffing-optimization insights** · `P2` — _Covers:_ AD-05. Depends on T2.12. Density-derived staffing recommendations.
 - [ ] **T3.4 — Trainer performance dashboards** · `P2` — _Covers:_ ST-04. Depends on T2.20.
-- [ ] **T3.5 — Access-control hardware integration** · `P2` — _Covers:_ AC-03, AC-04. Depends on T2.21, T2.22. Turnstile/RFID/smart-lock + 24/7 unmanned mode. *(Open Q4: vendor selection + install model.)*
+- [ ] **T3.5 — Access-control hardware integration** · `P2` — _Covers:_ AC-03, AC-04. Depends on T2.21, T2.22. Turnstile/RFID/smart-lock + 24/7 unmanned mode. _(Open Q4: vendor selection + install model.)_
 - [ ] **T3.6 — Multi-branch & centralized dashboard** · `P2` — _Covers:_ ML-03, ML-04. Depends on T0.6. Members usable across locations + owner cross-branch dashboard.
-- [ ] **T3.7 — Payment processor integration** · `P2` — _Covers:_ §9.2 processor. Depends on T1.7. CaSys/CPAY/bank gateway with fiscal-compliant flow. *(Open Q1.)*
+- [ ] **T3.7 — Payment processor integration** · `P2` — _Covers:_ §9.2 processor. Depends on T1.7. CaSys/CPAY/bank gateway with fiscal-compliant flow. _(Open Q1.)_
 - [ ] **T3.8 — In-app membership purchase & renewal** · `P2` — _Covers:_ MP-01. Depends on T3.7, T1.14. Online buy/renew with fiscal receipt.
-- [ ] **T3.9 — In-app payment** · `P2` — _Covers:_ MP-02. Depends on T3.7, T3.8. *(Blocked on Open Q1 regulatory/processor confirmation.)*
+- [ ] **T3.9 — In-app payment** · `P2` — _Covers:_ MP-02. Depends on T3.7, T3.8. _(Blocked on Open Q1 regulatory/processor confirmation.)_
 - [ ] **T3.10 — In-gym leaderboard** · `P2` — _Covers:_ MS-01. Depends on T2.24. Same-gym leaderboard, opt-in.
-- [ ] **T3.11 — Friends cross-gym leaderboard** · `P2` — _Covers:_ MS-02. Depends on T3.10. *(Open Q5: global vs per-gym member identity — resolve first.)* Visibility strictly user + added friends.
+- [ ] **T3.11 — Friends cross-gym leaderboard** · `P2` — _Covers:_ MS-02. Depends on T3.10. _(Open Q5: global vs per-gym member identity — resolve first.)_ Visibility strictly user + added friends.
 - [ ] **T3.12 — Activity logging (Strava-like)** · `P2` — _Covers:_ MS-03. Depends on T2.24. Optional exercises/sets/duration/photo logging, GDPR-sensitive.
 
 ---
 
 ## Appendix A — PRD Requirement Coverage
 
-| Phase | Requirement IDs covered |
-|---|---|
+| Phase        | Requirement IDs covered                                                                                                                                                                                                                                                                                                         |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **P0 (MVP)** | AM-01, AM-02, AM-03, AM-04, AM-05, AM-06, AM-07, AM-08, AM-09, AM-13 · BP-01, BP-02, BP-03, BP-04, BP-07 · BA-01, BA-02, BA-03 · AD-01, AD-02 · RT-01, RT-02, RT-03 · ST-01 · AC-01 · ML-01 · MA-01, MA-02, MA-03, MA-04, MA-05 · PL-01 (MK/EN), PL-02, PL-03, PL-05, PL-06 · fiscal devices (mock→real T1.19), UJP, barcode/QR |
-| **P1** | AM-10, AM-11, AM-12 · BP-05, BP-06, BP-08, BP-10 · BA-04, BA-05, BA-06 · AD-03, AD-04 · RT-04, RT-05, RT-06 · CS-01–CS-06 · ST-02, ST-03 · AC-02 · ML-02 · MA-06, MA-07, MA-08 · MB-01, MB-02, MB-03, MB-04 · PL-01 (SQ), PL-04 · SMS, email, push |
-| **P2** | BP-09 · BA-07 · AD-05 · ST-04 · AC-03, AC-04 · ML-03, ML-04 · MP-01, MP-02 · MS-01, MS-02, MS-03 · payment processor, access-control hardware |
+| **P1**       | AM-10, AM-11, AM-12 · BP-05, BP-06, BP-08, BP-10 · BA-04, BA-05, BA-06 · AD-03, AD-04 · RT-04, RT-05, RT-06 · CS-01–CS-06 · ST-02, ST-03 · AC-02 · ML-02 · MA-06, MA-07, MA-08 · MB-01, MB-02, MB-03, MB-04 · PL-01 (SQ), PL-04 · SMS, email, push                                                                              |
+| **P2**       | BP-09 · BA-07 · AD-05 · ST-04 · AC-03, AC-04 · ML-03, ML-04 · MP-01, MP-02 · MS-01, MS-02, MS-03 · payment processor, access-control hardware                                                                                                                                                                                   |
 
 ## Appendix B — Open Questions Carried From PRD §15
 
 These do **not** block the MVP build but must be answered before their dependent tasks:
+
 1. In-app/card payment regulatory + processor (CaSys/CPAY/bank) → blocks **T3.7–T3.9**.
 2. Fiscal device models + certification effort per model → informs **T1.19** (first target to be pinned).
 3. Pricing/segment skew (GTM) → influences P1/P2 prioritization.

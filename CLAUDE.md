@@ -2,11 +2,31 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Project status: greenfield (pre-scaffold)
+## Current status / next up
 
-This repository currently contains **only planning docs** — there is no application code, `package.json`, or git history yet. Do not assume any build tooling exists until it has been scaffolded.
+**Phase 0 — Foundations, in progress.**
 
-The two sources of truth:
+- ✅ **T0.1** Monorepo scaffold (pnpm + Turborepo, 9 workspace packages, `pnpm build` green).
+- ⏭️ **NEXT: T0.2** Shared tooling & CI (ESLint flat config, commit hooks, GitHub Actions).
+
+Always re-read `Docs/TASKLIST.md` for the authoritative, up-to-date task state before starting a task.
+
+## Environment notes
+
+- **pnpm** installed via `npm i -g pnpm@9.15.9` (corepack shim did not land on PATH on this Windows machine). Node 24, git 2.53, Docker + Compose present; no local `mysql` client (MySQL runs in Docker).
+- **git remote** `origin` = github.com/bojan-eftimoski/gymapp; `main` tracks `origin/main`; Git Credential Manager has cached creds so pushes work non-interactively.
+- **Line endings:** repo-normalized to **LF** via `.gitattributes` (checked out native on Windows).
+
+## Conventions
+
+- **Commits:** Conventional Commits, with the task ID in brackets, e.g. `feat(members): add profile CRUD [T1.1]`. Commit per logical unit; end messages with the `Co-Authored-By` trailer.
+- **Package names:** `@gymapp/<name>` across the workspace.
+- **Workflow:** finish a task → tick its boxes + add a one-line note in `Docs/TASKLIST.md` → commit → start the next unchecked task.
+
+## Sources of truth
+
+The two planning docs:
+
 - **`Docs/Gym_Management_Platform_PRD.md`** — full product requirements (multi-tenant gym/fitness management platform for North Macedonia; admin web + member mobile app + shared backend). Requirement IDs (e.g. `AM-01`, `BP-02`) are referenced throughout the task list.
 - **`Docs/TASKLIST.md`** — the master implementation task list. **Start here for any build work.** Tasks are ordered Phase 0 (Foundations) → Phase 1 (MVP/P0) → Phase 2 (P1) → Phase 3 (P2), each with a checkbox, dependencies (by task ID like `T0.6`), and the PRD requirement IDs it covers. Work top-to-bottom; do not start a feature task before its dependency tasks are checked off. The entry point is **T0.1**; the fiscal spike (**T0.9**) is deliberately front-loaded to retire the biggest risk first.
 
@@ -53,7 +73,7 @@ The **Prisma schema in `packages/db` is the source of truth for the data model**
 
 ## Planned commands
 
-The repo is **not yet scaffolded**, so these do not run today. Once T0.1–T0.5 are complete, the intended Turborepo/pnpm commands are:
+Root-level Turbo commands now run (T0.1 done); per-package commands come online as each package is fleshed out. Current commands:
 
 ```bash
 pnpm install                       # install workspace deps
